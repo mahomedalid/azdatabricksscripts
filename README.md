@@ -32,8 +32,12 @@ Bash scripts that could be useful for different CI/CD strategies or containers u
 ```
 DATABRICKS_PROFILE_NAME='aad'
 DATABRICKS_URL='adb-1234567890.22.azuredatabricks.net'
+
 ./configure-aadprofile.sh -u $DATABRICKS_URL -n $DATABRICKS_PROFILE_NAME
+
 ./init-cluster.sh -a $DATABRICKS_PROFILE_NAME ...
+
 ./init-secretscope.sh -a $DATABRICKS_PROFILE_NAME -p "/subscriptions/${KV_SUBSCRIPTION_ID}/resourceGroups/${KV_RESOURCE_GROUP}/providers/${KV_RESOURCE_ID}" -k "$KV_URI"
+
 ./deploy-notebooks.sh -a $DATABRICKS_PROFILE_NAME -p '/Shared/QA' -n './repos/mydatabricksproject/notebooks'
 ```
