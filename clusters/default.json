@@ -1,0 +1,14 @@
+{
+    "cluster_name": "default",
+    "spark_version": "9.1.x-scala2.12",
+    "node_type_id": "Standard_DS3_v2",
+    "spark_conf": {
+      "spark.speculation": true,
+      "spark.databricks.service.server.enabled": true,
+      "spark.databricks.service.port": 8787
+    },
+    "autoscale": {
+        "min_workers": 2,
+        "max_workers": 8
+    }
+  }

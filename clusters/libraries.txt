@@ -1,0 +1,2 @@
+com.microsoft.azure:azure-eventhubs-spark_2.12:2.3.18
+com.microsoft.azure:spark-mssql-connector_2.12:1.2.0
