@@ -5,16 +5,17 @@
 DATABRICKS_PROFILE_NAME="aad"
 DATABRICKS_AAD_ID="2ff814a6-3304-4ab8-85cb-cd0e6f879c1d"
 
-while getopts :u:p: option
+while getopts :u:a: option
 do
     case "${option}" in
     u) DATABRICKS_URL=${OPTARG};;
+    a) DATABRICKS_PROFILE_NAME=${OPTARG};;
     esac
 done
 
 if [ -z "$DATABRICKS_URL" ]; then
-    echo "usage: $0 -u <databricks_url_without_protocol> [-n profilename]"
-    echo " ex.: $0 -u adb-12345600.77.azuredatabricks.net -n aad"
+    echo "usage: $0 -u <databricks_url_without_protocol> [-a profilename]"
+    echo " ex.: $0 -u adb-12345600.77.azuredatabricks.net -a aad"
     exit 1
 fi
 
