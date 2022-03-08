@@ -25,22 +25,38 @@ Bash scripts that could be useful for different CI/CD strategies or containers u
 
 ## Creating the full environment
 
-az account
-az login
+### Prereqs
+
 install python
 install azcli
 install databricks-cli
-[WIP]
 
-... Deploy bicep ... take outputs ... >
+### Sample script
 
 ```
+SUBSCRIPTION_ID=""
+PROJECT_NAME="myproject"
+AZ_LOCATION="eastus"
+DEPLOYMENT_NAME="${PROJECT_NAME}${LOCATION}"
 DATABRICKS_PROFILE_NAME='aad'
-DATABRICKS_URL='adb-1234567890.22.azuredatabricks.net'
+DATABRICKS_CLUSTER_NAME="qa"
+
+az login
+az account set --subscription $SUBSCRIPTION_ID
+az bicep install
+
+az deployment sub create -n $DEPLOYMENT_NAME -f infra/main.bicep -l $AZ_LOCATION --parameters projectName=$PROJECT_NAME
+
+DATABRICKS_URL=`az deployment sub show -n ${DEPLOYMENT_NAME} --query properties.outputs.databricksUrl.value -o tsv`
+
+KV_SUBSCRIPTION_ID=`az deployment sub show -n ${DEPLOYMENT_NAME} --query properties.outputs.keyVault.value.subscriptionId -o tsv`
+KV_RESOURCE_GROUP=`az deployment sub show -n ${DEPLOYMENT_NAME} --query properties.outputs.keyVault.value.resourceGroupName -o tsv`
+KV_RESOURCE_ID=`az deployment sub show -n ${DEPLOYMENT_NAME} --query properties.outputs.keyVault.value.resourceId -o tsv`
+KV_URI=`az deployment sub show -n ${DEPLOYMENT_NAME} --query properties.outputs.keyVault.value.properties.vaultUri -o tsv`
 
 ./configure-aadprofile.sh -u $DATABRICKS_URL -n $DATABRICKS_PROFILE_NAME
 
-./init-cluster.sh -a $DATABRICKS_PROFILE_NAME ...
+./init_cluster -a $DATABRICKS_PROFILE_NAME -n $DATABRICKS_CLUSTER_NAME -l clusters/libraries.txt -d clusters/default.json
 
 ./init-secretscope.sh -a $DATABRICKS_PROFILE_NAME -p "/subscriptions/${KV_SUBSCRIPTION_ID}/resourceGroups/${KV_RESOURCE_GROUP}/providers/${KV_RESOURCE_ID}" -k "$KV_URI"
 
